@@ -1,5 +1,11 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { Carousel } from "@/components/ui/carousel";
+import { PostHeader } from "../custom _component/postHeader";
+import { PostActions } from "../custom _component/postActions";
+import { PostContent } from "../custom _component/postContent";
+import { PostFooter } from "../custom _component/postFooter";
 
 type LikeTypes = {
   profile: string;
@@ -11,7 +17,7 @@ type PostType = {
   _id: string;
   caption: string;
   postImg: string;
-  userid: {
+  userId: {
     username: string;
     profileImg: string;
   };
@@ -25,15 +31,14 @@ const Page = () => {
 
   const getPosts = async () => {
     const token = localStorage.getItem("accessToken");
-    console.log(token);
     if (!token) {
-      setError("no authorization token found.");
+      setError("No authorization token found.");
       setLoading(false);
       return;
     }
 
     try {
-      const jsonData = await fetch(
+      const response = await fetch(
         "https://ig-backend-jivr.onrender.com/posts",
         {
           headers: {
@@ -43,16 +48,14 @@ const Page = () => {
         }
       );
 
-      if (!jsonData) {
-        throw new Error("Failed to fetch posts");
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts: " + response.statusText);
       }
 
-      const response = await jsonData.json();
-      console.log(response);
-
-      setPosts(response);
+      const data = await response.json();
+      setPosts(data);
     } catch (err) {
-      console.log("Error fetching posts:", err);
+      console.error("Error fetching posts:", err);
       setError("Failed to fetch posts. Please try again later.");
     } finally {
       setLoading(false);
@@ -63,41 +66,54 @@ const Page = () => {
     getPosts();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center text-white bg-black">
+        <span>Loading posts...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center text-white bg-black">
+        <span>{error}</span>
+      </div>
+    );
+  }
+
+  if (posts.length === 0) {
+    return (
+      <div className="flex justify-center items-center text-white bg-black">
+        <span>No posts available</span>
+      </div>
+    );
+  }
+  console.log(posts);
   return (
-    <div>
-      {loading ? (
-        <p>Loading posts...</p>
-      ) : error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : posts.length === 0 ? (
-        <p>No posts available.</p>
-      ) : (
-        posts.map((post) => (
-          <div key={post._id} style={{ marginBottom: "20px" }}>
-            <div style={{ fontWeight: "bold" }}>{post.userid.username}</div>
-            <div>{post.caption}</div>
-            <img
-              src={post.postImg}
-              alt="Post Image"
-              style={{ width: "100%", height: "auto", marginTop: "10px" }}
-            />
-            <div>
-              <p>Likes:</p>
-              {post.likes.length > 0 ? (
-                post.likes.map((like) => (
-                  <div key={like._id}>
-                    <span>{like.username}</span>
-                  </div>
-                ))
-              ) : (
-                <p>No likes yet</p>
-              )}
-            </div>
-          </div>
-        ))
-      )}
+    <div className="flex flex-col justify-center items-center bg-black">
+      <div className="text-white border-b w-screen h-10 mt-3 text-lg">
+        𝓘𝓷𝓼𝓽𝓪𝓰𝓻𝓪𝓶
+      </div>
+      {posts.map((post) => (
+        <div key={post._id} className="w-fit bg-black text-white mt-10 mb-10">
+          <PostHeader
+            profileImg={post.userId?.profileImg}
+            username={post.userId?.username}
+          />
+          <Carousel className="w-full max-w-xl">
+            <PostContent postImg={post.postImg} />
+            <PostActions />
+          </Carousel>
+          <PostFooter
+            username={post.userId?.username}
+            like={post.likes.length}
+            caption={post.caption}
+            id={post._id}
+          />
+        </div>
+      ))}
     </div>
   );
 };
-
 export default Page;

@@ -27,7 +27,7 @@ const SignUpPage = () => {
 
     try {
       const jsonData = await fetch(
-        "https://instagram-server-8xvr.onrender.com/signup",
+        "https://ig-backend-jivr.onrender.com/signup",
         {
           method: "POST",
           headers: {
@@ -48,7 +48,7 @@ const SignUpPage = () => {
       console.log(token);
       localStorage.setItem("accessToken", token);
 
-      // router.push("/post");
+      router.push("/post");
     } catch (err) {
       console.error("Error during signup:", err);
       setError(" error occurred while processing your request.");
