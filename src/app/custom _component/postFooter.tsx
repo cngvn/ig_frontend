@@ -6,10 +6,10 @@ export const PostFooter = ({
   caption,
   id,
 }: {
-  username: string,
-  like: number,
-  caption: string,
-  id: string,
+  username: string;
+  like: number;
+  caption: string;
+  id: string;
 }) => {
   return (
     <>
