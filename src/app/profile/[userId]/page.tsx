@@ -22,7 +22,7 @@ type Comment = {
 type postType = {
   _id: string;
   caption: string;
-  postImage: string[];
+  postImg: string;
   userId: User;
   likes: string[];
   comments: Comment[];
@@ -33,8 +33,7 @@ type userType = {
   posts: postType[];
   followers: string[];
   following: string[];
-  profileImage: string;
-  bio: string;
+  profileImg: string;
 };
 const Profile = () => {
   const [account, setAccount] = useState<boolean>(false);
@@ -81,6 +80,7 @@ const Profile = () => {
         followingUserId: userId,
         userId: accountId,
       };
+      console.log(body);
       await fetch(" https://ig-backend-jivr.onrender.com/follow", {
         method: "POST",
         headers: {
@@ -119,7 +119,7 @@ const Profile = () => {
       <div className="flex items-center justify-around text-white">
         <div className="flex gap-2 items-center ">
           <Avatar className="h-[100px] w-[100px]">
-            <AvatarImage src={user?.profileImage} />
+            <AvatarImage src={user?.profileImg} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
@@ -144,7 +144,6 @@ const Profile = () => {
       <div className="font-bold text-white flex justify-between px-6">
         {user?.username}
       </div>
-      <div className=" text-white flex justify-between px-6 ">{user?.bio}</div>
       <div className="flex justify-center">
         {" "}
         {account === false ? (
@@ -158,23 +157,23 @@ const Profile = () => {
           </Button>
         ) : null}
       </div>
-      <div className="width-full flex flex-wrap">
-        {" "}
-        {user?.posts?.map((post) => {
+      <div className="width-full flex flex-wrap ">
+        {user?.posts?.map((posts, i) => {
+          console.log(posts);
+
           return (
-            <img
-              key={post._id}
-              src={post.postImage[0]}
-              className="w-1/3 h-[130px] bg-no-repeat bg-cover bg-center "
-              onClick={() => {
-                router.replace(`/posts/${userId}/${post._id}`);
-              }}
-            />
+            <div key={i}>
+              <p>{posts.caption}</p>
+              <img
+                key={posts._id}
+                src={posts.postImg}
+                className="w-full sm:w-1/3 h-[230px] object-cover"
+                alt={posts.caption}
+              />
+            </div>
           );
         })}
       </div>
-
-      {/* <PostFooter /> */}
     </div>
   );
 };

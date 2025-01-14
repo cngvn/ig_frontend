@@ -27,7 +27,7 @@ export const Follow = ({
   const getFollowers = async () => {
     if (userId) {
       const jsonData = await fetch(
-        `https://ig-backend-jivr.onrender.com/followed${userId}`,
+        `https://ig-backend-jivr.onrender.com/followed/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const Follow = ({
   const getFollowing = async () => {
     if (userId) {
       const jsonData = await fetch(
-        `https://ig-backend-jivr.onrender.com/getOneUser${userId}`,
+        `https://ig-backend-jivr.onrender.com/following/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",

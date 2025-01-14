@@ -13,6 +13,7 @@ const LoginPage = () => {
 
     console.log("Form Submitted", { email, password });
   };
+  
 
   return (
     <div className="flex justify-center items-center bg-black h-screen">
