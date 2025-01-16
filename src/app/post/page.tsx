@@ -42,7 +42,7 @@ const Page = () => {
     const token = localStorage.getItem("accessToken") ?? "";
     const decodedToken: tokenType = jwtDecode(token);
     const Id = decodedToken.userId;
-    setAccountId(Id);
+    setAccountId(Id)
 
     if (!token) {
       setError("No authorization token found.");

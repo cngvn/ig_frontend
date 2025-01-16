@@ -1,76 +1,85 @@
 "use client";
-
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    console.log("Form Submitted", { email, password });
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+const Page = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const body = {
+    email,
+    password,
+    username,
   };
-  
+  const router = useRouter();
+  const validation = async () => {
+    const jsonData = await fetch("https://ig-backend-jivr.onrender.com/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
+    const data = await jsonData.json();
+
+    if (data) {
+      const token = data.token;
+      localStorage.setItem("accessToken", token);
+      router.push("/post");
+    } else {
+    }
+  };
   return (
-    <div className="flex justify-center items-center bg-black h-screen">
-      <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-          Instagram
-        </h1>
-        <h1 className="text-xs italic text-center text-gray-800 mb-6">
-          Log in to see photos and videos from your friends.
-        </h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Input
-              type="email"
-              id="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <Input
-              type="password"
-              id="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div className="mt-6">
-            <Button
-              type="submit"
-              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-            >
-              Log In
-            </Button>
-          </div>
-        </form>
-
-        <div className="mt-4 text-center text-gray-500">
-          <p>
-            Don't have an account?{""}
-            <a href="/signup" className="text-blue-600 hover:text-blue-700">
-              Sign up
-            </a>
-          </p>
-        </div>
-      </div>
+    <div className=" bg-black flex justify-center items-center w-screen h-screen">
+      <Card className="flex flex-col bg-black justify-center items-center border-0">
+        <CardHeader>
+          <CardTitle className="text-white italic">𝓘𝓷𝓼𝓽𝓪𝓰𝓻𝓪𝓶</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <Input
+            className="text-white"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
+          <Input
+            className="text-white"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <Input
+            className="text-white"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <Button onClick={() => validation()}>Log in</Button>
+        </CardContent>
+        <CardFooter className="flex gap-1">
+          <p className="text-white">Don&apos;t have an account?</p>
+          <Link href={"/signup"} className="text-white">
+            Sign up
+          </Link>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
-
-export default LoginPage;
+export default Page;

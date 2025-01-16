@@ -88,13 +88,13 @@ const CommentPage = () => {
           <div key={index} className="flex justify-between items-start">
             <div className="flex p-4 space-x-3 w-full ">
               <Avatar>
-                <AvatarImage src={comment.userId.profileImg} />
+                <AvatarImage src={comment?.userId?.profileImg} />
               </Avatar>
               <div className="flex flex-col w-full">
                 <div className="text-slate-50 font-semibold">
-                  {comment.userId.username}
+                  {comment?.userId?.username}
                 </div>
-                <div className="text-slate-50">{comment.comment}</div>
+                <div className="text-slate-50">{comment?.comment}</div>
                 <div className="font-semibold text-xs text-gray-400 mt-1 cursor-pointer">
                   Reply
                 </div>
